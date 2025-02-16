@@ -14,3 +14,18 @@ When you create the architecture of your future data warehouse, you have to take
 - **Metadata Repository:** The metadata repository stores information, such as data definitions, data lineage, and data relationships, about the data stored in the warehouse. Metadata is essential for understanding the data’s context and makes your data easier to find, access, and use.‍
 - **Query and Reporting Tools:** These tools allow you to extract actionable insights from the warehouse data. Query tools enable ad-hoc queries, and reporting tools help create structured reports and visual dashboards.
 ### **Approaches to building a data warehouse**
+The two fundamental design methods, which are used to build a data warehouse, are Inmon’s (Top-down) and Kimball’s (Bottom-up) approaches. 
+
+**Inmon’s approach**
+
+Within Inmon’s approach, firstly, a centralized repository for enterprise information is designed according to a normalized data model, where atomic data is stored in tables that are grouped together by subject areas with the help of joins. After the enterprise data warehouse is built, the data stored there is used to structure data marts.
+
+Inmon’s approach is more preferable in cases when you need to:
+- Get a single source of truth while ensuring data consistency, accuracy and reliability
+- Quickly develop data marts with no effort duplication for extracting data from original sources, cleansing, etc.
+However, one of the major constraints of this method is that the setup and implementation is more time and resource-consuming compared to Kimball’s approach.
+
+**Kimball’s approach**
+
+Kimball’s approach suggests that dimensional data marts should be created first, then if required, a company may proceed with creating a logical enterprise data warehouse.
+The advocates of this approach point out that since dimensional data marts require minimal normalization, such data warehouse projects take less time and resources.  On the other hand, you may find duplicate data in tables and have to repeat ETL activities, as each data mart is created independently.
