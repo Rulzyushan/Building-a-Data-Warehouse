@@ -32,3 +32,10 @@ The advocates of this approach point out that since dimensional data marts requi
 
 ### **ETL Process**
 ![ETL.PNG](ETL.PNG?raw=true)
+
+### **Dimensional modeling**
+
+Dimensional Modeling (DM) is a data structure technique optimized for data storage in a Data warehouse. The purpose of dimensional modeling is to optimize the database for faster retrieval of data. The concept of Dimensional Modelling was developed by Ralph Kimball and consists of fact and dimension tables.
+
+A dimensional model in data warehouse is designed to read, summarize, analyze numeric information like values, balances, counts, weights, etc. in a data warehouse. In contrast, relation models are optimized for addition, updating and deletion of data in a real-time Online Transaction System. in the relational mode, normalization and ER models reduce redundancy in data. On the contrary, dimensional model in data warehouse arranges data in such a way that it is easier to retrieve information and generate reports.
+
