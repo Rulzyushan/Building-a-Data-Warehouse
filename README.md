@@ -52,7 +52,6 @@ A dimensional model in data warehouse is designed to read, summarize, analyze nu
 ### **Star schema design**
 
 Star schema is a dimensional modeling design technique adopted by relational data warehouses.
-- Dimension tables describe the entities relevant to your organization and analytics requirements. Broadly, they represent the things that you model. Things could be products, people, places, or any other concept, including date and time. For more information and design best practices, see Dimension tables in this series.
-- Fact tables store measurements associated with observations or events. They can store sales orders, stock balances, exchange rates, temperature readings, and more. Fact tables contain dimension keys together with granular values that can be aggregated. For more information and design best practices, see Fact tables in this series.
+- **Dimension tables** describe the entities relevant to your organization and analytics requirements. Broadly, they represent the things that you model. Things could be products, people, places, or any other concept, including date and time.
+- **Fact tables** store measurements associated with observations or events. They can store sales orders, stock balances, exchange rates, temperature readings, and more. Fact tables contain dimension keys together with granular values that can be aggregated.
 
-A star schema design is optimized for analytic query workloads. For this reason, it's considered a prerequisite for enterprise Power BI semantic models. Analytic queries are concerned with filtering, grouping, sorting, and summarizing data. Fact data is summarized within the context of filters and groupings of the related dimension tables.
