@@ -39,3 +39,12 @@ Dimensional Modeling (DM) is a data structure technique optimized for data stora
 
 A dimensional model in data warehouse is designed to read, summarize, analyze numeric information like values, balances, counts, weights, etc. in a data warehouse. In contrast, relation models are optimized for addition, updating and deletion of data in a real-time Online Transaction System. in the relational mode, normalization and ER models reduce redundancy in data. On the contrary, dimensional model in data warehouse arranges data in such a way that it is easier to retrieve information and generate reports.
 
+### **Normalization vs. Denormalization**
+
+- Normalization is the technique of dividing the data into multiple tables to reduce data redundancy and inconsistency and to achieve data integrity. On the other hand, Denormalization is the technique of combining the data into a single table to make data retrieval faster.
+- Normalization is used in OLTP system, which emphasizes on making the insert, delete and update anomalies faster. As against, Denormalization is used in OLAP system, which emphasizes on making the search and analysis faster.
+- Data integrity is maintained in normalization process while in denormalization data integrity harder to retain.
+- Redundant data is eliminated when normalization is performed whereas denormalization increases the redundant data
+- Normalization increases the number of tables and joins. In contrast, denormalization reduces the number of tables and join.
+- Disk space is wasted in denormalization because same data is stored in different places. On the contrary, disk space is optimized in a normalized table.
+- Normalization and denormalization are useful according to the situation. Normalization is used when the faster insertion, deletion and update anomalies, and data consistency are necessarily required. On the other hand, Denormalization is used when the faster search is more important and to optimize the read performance. It also lessens the overheads created by over-normalized data or complicated table joins.
