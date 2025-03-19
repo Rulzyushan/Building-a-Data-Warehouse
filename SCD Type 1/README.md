@@ -25,7 +25,8 @@ Create and Populate the dim_customers Table
 
 ```sql
 -- Drop the table if it already exists to avoid duplication errors
-DROP TABLE IF EXISTS dim_customers;
+IF OBJECT_ID('dim_customers', 'U') IS NOT NULL
+    DROP TABLE dim_customers;
 
 -- Create dim_customers table with a unique constraint on customer_id
 CREATE TABLE dim_customers (
@@ -50,7 +51,8 @@ Create and populate the staging_customers Table
 
 ```sql
 -- Drop the table if it already exists to avoid duplication errors
-DROP TABLE IF EXISTS staging_customers;
+IF OBJECT_ID('staging_customers', 'U') IS NOT NULL
+    DROP TABLE staging_customers;
 
 -- Create staging_customers table
 CREATE TABLE staging_customers (
