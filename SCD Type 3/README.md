@@ -74,7 +74,7 @@ VALUES
     (1002, 'Jane', 'Smith', '555-9999', 'jane.smith@newemail.com'),-- Updated phone and email for existing customer
     (1004, 'Emily', 'Davis', '555-1111', 'emily.davis@example.com'); -- New customer record
 ```
-![Screenshot2.png](SCD2/Screenshot2.png?raw=true)
+![Screenshot2.png](SCD3/Screenshot2.png?raw=true)
 
 Implementation of SCD Type 3
 
@@ -94,4 +94,4 @@ WHEN NOT MATCHED BY TARGET THEN
     INSERT (customer_id, first_name, last_name, phone, previous_phone, email, previous_email)
     VALUES (source.customer_id, source.first_name, source.last_name, source.phone, NULL, source.email, NULL);
 ```
-![Screenshot3.png](SCD2/Screenshot3.png?raw=true)
+![Screenshot3.png](SCD3/Screenshot3.png?raw=true)
