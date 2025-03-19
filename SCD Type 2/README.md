@@ -79,18 +79,57 @@ VALUES
 
 Implementation of SCD Type 2
 
-```sql
-MERGE dim_customers AS target
-USING staging_customers AS source
-ON target.customer_id = source.customer_id
-WHEN MATCHED THEN
-    UPDATE SET
-        first_name = source.first_name,
-        last_name = source.last_name,
-        phone = source.phone,
-        email = source.email
-WHEN NOT MATCHED BY TARGET THEN
-    INSERT (customer_id, first_name, last_name, phone, email)
-    VALUES (source.customer_id, source.first_name, source.last_name, source.phone, source.email);
+BEGIN TRANSACTION;
+-- Step 1: Close out old records
+UPDATE dim_customers_scd2
+SET 
+    end_date = CAST(GETDATE() AS DATE),
+    is_current = 'N'
+WHERE customer_id IN (
+    SELECT staging.customer_id
+    FROM staging_customers_scd2 staging
+    JOIN dim_customers_scd2 dim
+      ON staging.customer_id = dim.customer_id
+      AND dim.is_current = 'Y'
+    WHERE 
+        staging.first_name <> dim.first_name OR
+        staging.last_name <> dim.last_name OR
+        staging.phone <> dim.phone OR
+        staging.email <> dim.email
+);
+
+-- Step 2: Insert new records
+INSERT INTO dim_customers_scd2 (
+  customer_id, 
+  first_name, 
+  last_name, 
+  phone, 
+  email,
+  start_date,
+  end_date,
+  is_current
+)
+SELECT 
+  staging.customer_id,
+  staging.first_name,
+  staging.last_name,
+  staging.phone,
+  staging.email,
+  CAST(GETDATE() AS DATE),
+  NULL,
+  'Y'
+FROM staging_customers_scd2 staging
+LEFT JOIN dim_customers_scd2 dim
+  ON staging.customer_id = dim.customer_id
+  AND dim.is_current = 'Y'
+WHERE dim.customer_id IS NULL
+   OR (
+     staging.first_name <> dim.first_name OR
+     staging.last_name <> dim.last_name OR
+     staging.phone <> dim.phone OR
+     staging.email <> dim.email
+   );
+
+COMMIT TRANSACTION;
 ```
 ![Screenshot3.png](SCD2/Screenshot3.png?raw=true)
