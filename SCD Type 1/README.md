@@ -21,7 +21,7 @@ CREATE SCHEMA SCD_bronze;
 GO
 ```
 
-Create and populate the dim_customers Table
+Create the dim_customers Table
 
 ```sql
 -- Drop the table if it already exists to avoid duplication errors
@@ -42,4 +42,9 @@ VALUES
     (1001, 'John', 'Doe', '555-1234', 'john.doe@example.com'),
     (1002, 'Jane', 'Smith', '555-5678', 'jane.smith@example.com'),
     (1003, 'James', 'Brown', '555-8765', 'james.brown@example.com');
+```
+Populate the dim_customers Table
+
+```sql
+SELECT * FROM dim_customers
 ```
