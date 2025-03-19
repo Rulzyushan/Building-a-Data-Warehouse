@@ -70,3 +70,19 @@ VALUES
 ```
 ![Screenshot2.png](SCD1/Screenshot2.png?raw=true)
 
+Implementation of SCD Type 1
+
+```sql
+MERGE dim_customers AS target
+USING staging_customers AS source
+ON target.customer_id = source.customer_id
+WHEN MATCHED THEN
+    UPDATE SET
+        first_name = source.first_name,
+        last_name = source.last_name,
+        phone = source.phone,
+        email = source.email
+WHEN NOT MATCHED BY TARGET THEN
+    INSERT (customer_id, first_name, last_name, phone, email)
+    VALUES (source.customer_id, source.first_name, source.last_name, source.phone, source.email);
+```
