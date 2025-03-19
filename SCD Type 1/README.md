@@ -68,5 +68,5 @@ VALUES
     (1002, 'Jane', 'Smith', '555-9999', 'jane.smith@newemail.com'), -- Updated phone and email for existing customer
     (1004, 'Emily', 'Davis', '555-1111', 'emily.davis@example.com'); -- New customer record
 ```
-
+![Screenshot2.png](SCD1/Screenshot2.png?raw=true)
 
