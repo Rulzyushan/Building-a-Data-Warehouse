@@ -86,3 +86,4 @@ WHEN NOT MATCHED BY TARGET THEN
     INSERT (customer_id, first_name, last_name, phone, email)
     VALUES (source.customer_id, source.first_name, source.last_name, source.phone, source.email);
 ```
+![Screenshot3.png](SCD1/Screenshot3.png?raw=true)
