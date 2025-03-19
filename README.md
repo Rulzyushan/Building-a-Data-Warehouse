@@ -52,8 +52,12 @@ Star schema is a dimensional modeling design technique adopted by relational dat
 - **Dimension tables** describe the entities relevant to your organization and analytics requirements. Broadly, they represent the things that you model. Things could be products, people, places, or any other concept, including date and time.
 - **Fact tables** store measurements associated with observations or events. They can store sales orders, stock balances, exchange rates, temperature readings, and more. Fact tables contain dimension keys together with granular values that can be aggregated.
 
-### **Dimension table**
+### **Design the Dimensional Model**
 
-In a dimensional model, a dimension table describes an entity relevant to your business and analytics requirements. Broadly, dimension tables represent the things that you model. Things could be products, people, places, or any other concept, including date and time.
+- **Fact Tables:** Identify the metrics or measures (e.g., sales amount, quantity sold).
+
+- **Dimension Tables:** Identify the descriptive attributes (e.g., customer name, product category, date).
+
+- Use a star schema or snowflake schema depending on the complexity of the data.
 
 ****
