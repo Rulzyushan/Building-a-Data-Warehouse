@@ -1,3 +1,26 @@
+Create Database and Schema
+
+```sql
+-- Drop and recreate the 'DataWarehouse' database
+IF EXISTS (SELECT 1 FROM sys.databases WHERE name = 'SCD_Database')
+BEGIN
+    ALTER DATABASE SCD_Database SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+    DROP DATABASE SCD_Database;
+END;
+GO
+
+
+CREATE DATABASE SCD_Database;
+GO
+
+USE SCD_Database;
+GO
+
+-- Create Schemas
+CREATE SCHEMA SCD_bronze;
+GO
+```
+
 Create and populate the dim_customers Table
 
 ```sql
