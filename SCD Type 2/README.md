@@ -79,6 +79,7 @@ VALUES
 
 Implementation of SCD Type 2
 
+```sql
 BEGIN TRANSACTION;
 -- Step 1: Close out old records
 UPDATE dim_customers_scd2
