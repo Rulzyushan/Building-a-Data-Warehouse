@@ -30,9 +30,6 @@ However, one of the major constraints of this method is that the setup and imple
 Kimball’s approach suggests that dimensional data marts should be created first, then if required, a company may proceed with creating a logical enterprise data warehouse.
 The advocates of this approach point out that since dimensional data marts require minimal normalization, such data warehouse projects take less time and resources.  On the other hand, you may find duplicate data in tables and have to repeat ETL activities, as each data mart is created independently.
 
-### **ETL Process**
-![ETL.PNG](ETL.PNG?raw=true)
-
 ### **Dimensional modeling**
 
 Dimensional Modeling (DM) is a data structure technique optimized for data storage in a Data warehouse. The purpose of dimensional modeling is to optimize the database for faster retrieval of data. The concept of Dimensional Modelling was developed by Ralph Kimball and consists of fact and dimension tables.
