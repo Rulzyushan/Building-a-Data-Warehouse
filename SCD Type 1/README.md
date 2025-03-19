@@ -44,4 +44,4 @@ VALUES
     (1003, 'James', 'Brown', '555-8765', 'james.brown@example.com');
 ```
 
-![Screenshot1.png](Screenshot1.png?raw=true)
+![Screenshot1.png](SCD1/Screenshot1.png?raw=true)
