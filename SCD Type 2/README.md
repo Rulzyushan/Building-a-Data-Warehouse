@@ -55,19 +55,21 @@ Create and populate the staging_customers_scd2 Table
 
 ```sql
 -- Drop the table if it already exists to avoid duplication errors
-DROP TABLE IF EXISTS staging_customers;
+IF OBJECT_ID('staging_customers_scd2', 'U') IS NOT NULL
+    DROP TABLE staging_customers_scd2;
 
 -- Create staging_customers table
-CREATE TABLE staging_customers (
+CREATE TABLE staging_customers_scd2 (
     row_id INT IDENTITY(1,1) PRIMARY KEY,    -- Surrogate key that auto-increments
-    customer_id INT UNIQUE,       -- Add UNIQUE constraint on customer_id
+    customer_id INT,
     first_name VARCHAR(50),
     last_name VARCHAR(100),
     phone VARCHAR(20),
     email VARCHAR(100)
 );
 
-INSERT INTO staging_customers (customer_id, first_name, last_name, phone, email)
+-- Insert data into the staging_customers_scd2 table
+INSERT INTO staging_customers_scd2 (customer_id, first_name, last_name, phone, email)
 VALUES 
     (1001, 'John', 'Doe', '555-4321', 'john.doe@newemail.com'),   -- Updated email and phone for existing customer
     (1002, 'Jane', 'Smith', '555-9999', 'jane.smith@newemail.com'), -- Updated phone and email for existing customer
