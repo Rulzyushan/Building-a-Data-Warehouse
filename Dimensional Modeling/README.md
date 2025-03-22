@@ -12,7 +12,7 @@ The optimal schema design for an operational information system implemented in a
 - Identifying the dimensions.
 - Identifying the facts.
 
-### **Business Processes**
+#### **Business Processes**
 In database, we can identify the following processes:
 
 - Ordering a bike by a customer.
@@ -21,7 +21,7 @@ In database, we can identify the following processes:
   
 The reason for considering ordering and shipping a bike as two different processes is that the order date and the shipment date are not necessarily identical, meaning the two processes do not occur simultaneously. Thus, each should be evaluated in a separate fact table.
 
-### **Grain**
+#### **Grain**
 
 1. **Grain Definition:**
 The grain defines what a single row in a fact table represents. It specifies the level of detail or granularity of the data.
