@@ -38,11 +38,11 @@ Kimball and Ross recommend starting with atomic-grained data because it provides
 4. **Example of Grain in Ordering and Shipping Processes:**
 In the example provided, the lowest level of data for analyzing ordering and shipping processes is:
 
-- Per date
-- Per customer
-- Per product
-- Per store
-- Per staff
+ - Per date
+ - Per customer
+ - Per product
+ - Per store
+ - Per staff
 
   If the grain were defined only by date, customer, and product, it would not allow analysis by staff or store attributes (e.g., store 
   location). This would limit the ability to answer certain business questions.
