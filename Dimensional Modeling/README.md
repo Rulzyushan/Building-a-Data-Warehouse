@@ -11,7 +11,7 @@ The optimal schema design for an operational information system implemented in a
 - Declaring the gain.
 - Identifying the dimensions.
 - Identifying the facts.
-
+****
 #### **Business Processes**
 In database, we can identify the following processes:
 
@@ -57,3 +57,4 @@ Similarly, the design should allow for easy extension of queries to analyze dela
 
 7. Flexibility in Querying:
 By defining the grain at the atomic level and including all relevant dimensions (e.g., customer, store, staff), the data warehouse becomes more flexible and capable of answering a wide variety of business questions.
+****
