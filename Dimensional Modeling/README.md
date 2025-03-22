@@ -1,4 +1,4 @@
 
 ### **Relational Database**
 
-![Screenshot 2025-03-22 132752.png](IMG/Screenshot 2025-03-22 132752.png?raw=true)
+![Screenshot1.png](IMG/Screenshot1.png?raw=true)
