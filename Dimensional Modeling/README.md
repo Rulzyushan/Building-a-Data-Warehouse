@@ -58,3 +58,128 @@ Similarly, the design should allow for easy extension of queries to analyze dela
 7. Flexibility in Querying:
 By defining the grain at the atomic level and including all relevant dimensions (e.g., customer, store, staff), the data warehouse becomes more flexible and capable of answering a wide variety of business questions.
 ****
+
+### **Query for Dimension Tables**
+```sql
+-- Dimension Tables
+CREATE TABLE dim_customer (
+    customer_id INT PRIMARY KEY,
+    first_name NVARCHAR(50),
+    last_name NVARCHAR(50),
+    phone NVARCHAR(15),
+    email NVARCHAR(100),
+    street NVARCHAR(100),
+    zip_code NVARCHAR(10),
+    state NVARCHAR(50)
+);
+
+CREATE TABLE dim_staff (
+    staff_id INT PRIMARY KEY,
+    first_name NVARCHAR(50),
+    last_name NVARCHAR(50),
+    phone NVARCHAR(15),
+    email NVARCHAR(100),
+    active BIT,
+    manager_id INT,
+    manager_first_name NVARCHAR(50),
+    manager_last_name NVARCHAR(50)
+);
+
+CREATE TABLE dim_product (
+    product_id INT PRIMARY KEY,
+    product_name NVARCHAR(100),
+    list_price DECIMAL(10, 2),
+    model_year INT,
+    brand_name NVARCHAR(50),
+    category_name NVARCHAR(50)
+);
+
+CREATE TABLE dim_store (
+    store_id INT PRIMARY KEY,
+    store_name NVARCHAR(100),
+    phone NVARCHAR(15),
+    email NVARCHAR(100),
+    street NVARCHAR(100),
+    zip_code NVARCHAR(10),
+    city NVARCHAR(50)
+);
+
+CREATE TABLE dim_date (
+    date_id INT PRIMARY KEY,
+    date DATE,
+    day_name NVARCHAR(10),
+    day_of_month INT,
+    week_of_month INT,
+    week_of_year INT,
+    month INT,
+    month_name NVARCHAR(10),
+    quarter INT,
+    year INT,
+    is_weekend BIT
+);
+
+CREATE TABLE diff_hierarchy (
+    staff_id INT,
+    subordinate_id INT,
+    hierarchy_depth INT,
+    PRIMARY KEY (staff_id, subordinate_id),
+    FOREIGN KEY (staff_id) REFERENCES dim_staff(staff_id),
+    FOREIGN KEY (subordinate_id) REFERENCES dim_staff(staff_id)
+);
+```
+
+### **Query for Fact Tables**
+```sql
+-- Fact Tables
+CREATE TABLE fact_bike_order (
+    order_date_id INT,
+    requirement_date_id INT,
+    customer_id INT,
+    staff_id INT,
+    store_id INT,
+    product_id INT,
+    order_id INT PRIMARY KEY,
+    quantity INT,
+    list_price DECIMAL(10, 2),
+    discount DECIMAL(5, 2),
+    order_amount DECIMAL(10, 2),
+    discounted_order_amount DECIMAL(10, 2),
+    FOREIGN KEY (customer_id) REFERENCES dim_customer(customer_id),
+    FOREIGN KEY (staff_id) REFERENCES dim_staff(staff_id),
+    FOREIGN KEY (store_id) REFERENCES dim_store(store_id),
+    FOREIGN KEY (product_id) REFERENCES dim_product(product_id),
+    FOREIGN KEY (order_date_id) REFERENCES dim_date(date_id),
+    FOREIGN KEY (requirement_date_id) REFERENCES dim_date(date_id)
+);
+
+CREATE TABLE fact_bike_shipment (
+    shipment_date_id INT,
+    customer_id INT,
+    staff_id INT,
+    store_id INT,
+    product_id INT,
+    order_id INT,
+    quantity INT,
+    list_price DECIMAL(10, 2),
+    discount DECIMAL(5, 2),
+    shipment_amount DECIMAL(10, 2),
+    discounted_shipment_amount DECIMAL(10, 2),
+    PRIMARY KEY (order_id, shipment_date_id),
+    FOREIGN KEY (customer_id) REFERENCES dim_customer(customer_id),
+    FOREIGN KEY (staff_id) REFERENCES dim_staff(staff_id),
+    FOREIGN KEY (store_id) REFERENCES dim_store(store_id),
+    FOREIGN KEY (product_id) REFERENCES dim_product(product_id),
+    FOREIGN KEY (shipment_date_id) REFERENCES dim_date(date_id)
+);
+
+CREATE TABLE fact_store_stock (
+    date_id INT,
+    store_id INT,
+    product_id INT,
+    quantity INT,
+    PRIMARY KEY (date_id, store_id, product_id),
+    FOREIGN KEY (store_id) REFERENCES dim_store(store_id),
+    FOREIGN KEY (product_id) REFERENCES dim_product(product_id),
+    FOREIGN KEY (date_id) REFERENCES dim_date(date_id)
+);
+```
