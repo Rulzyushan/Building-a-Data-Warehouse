@@ -183,3 +183,120 @@ CREATE TABLE fact_store_stock (
     FOREIGN KEY (date_id) REFERENCES dim_date(date_id)
 );
 ```
+
+### **Data Insertion for Dimension Tables**
+```sql
+
+```
+
+### **Data Insertion for Fact Tables**
+```sql
+-- ===========
+-- Order Fact
+-- ===========
+SELECT
+    CONVERT(INT, CONVERT(CHAR(8), o.order_date, 112)) AS order_date_id,
+    CONVERT(INT, CONVERT(CHAR(8), o.required_date, 112)) AS requirement_date_id,
+    o.customer_id,
+    o.staff_id,
+    o.store_id,
+    oi.product_id,
+    o.order_id,
+    oi.quantity,
+    oi.list_price,
+    oi.discount,
+    oi.list_price * oi.quantity AS order_amount,
+    (oi.list_price - oi.discount) * oi.quantity AS discounted_order_amount
+INTO dwh.fact_bike_order
+FROM bike_stores.orders o
+JOIN bike_stores.order_items oi
+    ON o.order_id = oi.order_id;
+
+ALTER TABLE dwh.fact_bike_order 
+ADD CONSTRAINT f_bike_order_date_fk      
+    FOREIGN KEY (order_date_id) REFERENCES dwh.dim_date(date_id);
+
+ALTER TABLE dwh.fact_bike_order 
+ADD CONSTRAINT f_bike_order_requirement_d_date_fk      
+    FOREIGN KEY (requirement_date_id) REFERENCES dwh.dim_date(date_id);
+
+ALTER TABLE dwh.fact_bike_order 
+ADD CONSTRAINT f_bike_order_d_customer_fk      
+    FOREIGN KEY (customer_id) REFERENCES dwh.dim_customer(customer_id);
+
+ALTER TABLE dwh.fact_bike_order 
+ADD CONSTRAINT f_bike_order_d_product_fk      
+    FOREIGN KEY (product_id) REFERENCES dwh.dim_product(product_id);
+
+ALTER TABLE dwh.fact_bike_order 
+ADD CONSTRAINT f_bike_order_d_staff_fk      
+    FOREIGN KEY (staff_id) REFERENCES dwh.dim_staff(staff_id);
+
+ALTER TABLE dwh.fact_bike_order 
+ADD CONSTRAINT f_bike_order_d_store_fk      
+    FOREIGN KEY (store_id) REFERENCES dwh.dim_store(store_id);
+
+-- ===============
+-- Shipment Fact
+-- ===============
+SELECT
+    CONVERT(INT, CONVERT(CHAR(8), o.shipped_date, 112)) AS shipment_date_id,
+    o.customer_id,
+    o.staff_id,
+    o.store_id,
+    oi.product_id,
+    o.order_id,
+    oi.quantity,
+    oi.list_price,
+    oi.discount,
+    oi.list_price * oi.quantity AS shipment_amount,
+    (oi.list_price - oi.discount) * oi.quantity AS discounted_shipment_amount
+INTO dwh.fact_bike_shipment
+FROM bike_stores.orders o
+JOIN bike_stores.order_items oi
+    ON o.order_id = oi.order_id
+WHERE o.shipped_date IS NOT NULL;
+
+ALTER TABLE dwh.fact_bike_shipment 
+ADD CONSTRAINT f_bike_shipment_d_date_fk      
+    FOREIGN KEY (shipment_date_id) REFERENCES dwh.dim_date(date_id);
+
+ALTER TABLE dwh.fact_bike_shipment 
+ADD CONSTRAINT f_bike_shipment_d_customer_fk      
+    FOREIGN KEY (customer_id) REFERENCES dwh.dim_customer(customer_id);
+
+ALTER TABLE dwh.fact_bike_shipment 
+ADD CONSTRAINT f_bike_shipment_d_product_fk      
+    FOREIGN KEY (product_id) REFERENCES dwh.dim_product(product_id);
+
+ALTER TABLE dwh.fact_bike_shipment 
+ADD CONSTRAINT f_bike_shipment_d_staff_fk      
+    FOREIGN KEY (staff_id) REFERENCES dwh.dim_staff(staff_id);
+
+ALTER TABLE dwh.fact_bike_shipment 
+ADD CONSTRAINT f_bike_shipment_d_store_fk      
+    FOREIGN KEY (store_id) REFERENCES dwh.dim_store(store_id);
+
+-- ============================
+-- Store Stock Fact
+-- ============================
+SELECT 
+    CONVERT(INT, CONVERT(CHAR(8), '2021-06-23', 112)) AS date_id,
+    store_id,
+    product_id,
+    quantity
+INTO dwh.fact_store_stock
+FROM bike_stores.stocks;
+
+ALTER TABLE dwh.fact_store_stock
+ADD CONSTRAINT f_store_stock_d_store_fk
+    FOREIGN KEY (store_id) REFERENCES dwh.dim_store(store_id);
+
+ALTER TABLE dwh.fact_store_stock
+ADD CONSTRAINT f_store_stock_d_product_fk
+    FOREIGN KEY (product_id) REFERENCES dwh.dim_product(product_id);
+
+ALTER TABLE dwh.fact_store_stock
+ADD CONSTRAINT f_store_stock_d_date_fk
+    FOREIGN KEY (date_id) REFERENCES dwh.dim_date(date_id);
+```
