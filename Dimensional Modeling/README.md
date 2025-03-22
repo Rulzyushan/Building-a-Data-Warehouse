@@ -186,7 +186,172 @@ CREATE TABLE fact_store_stock (
 
 ### **Data Insertion for Dimension Tables**
 ```sql
+-- Drop schema if exists and create schema
+IF SCHEMA_ID('dwh') IS NOT NULL
+    DROP SCHEMA dwh;
+GO
+CREATE SCHEMA dwh;
+GO
 
+-- ==================
+-- Product Dimension
+-- ==================
+SELECT 
+    p.product_id,
+    p.product_name,
+    p.list_price,
+    p.model_year,
+    b.brand_name,
+    c.category_name
+INTO dwh.dim_product
+FROM bike_stores.products p
+JOIN bike_stores.brands b
+    ON p.brand_id = b.brand_id
+JOIN bike_stores.categories c
+    ON p.category_id = c.category_id;
+
+ALTER TABLE dwh.dim_product
+ADD CONSTRAINT dim_product_pk PRIMARY KEY (product_id);
+
+-- ===================
+-- Customer Dimension
+-- ===================
+SELECT
+    c.customer_id,
+    c.first_name,
+    c.last_name,
+    COALESCE(c.phone, 'Unknown') AS phone,
+    COALESCE(c.email, 'Unknown') AS email,
+    COALESCE(c.street, 'Unknown') AS street,
+    COALESCE(c.zip_code, 'Unknown') AS zip_code,
+    COALESCE(c.state, 'Unknown') AS state
+INTO dwh.dim_customer
+FROM bike_stores.customers c;
+
+ALTER TABLE dwh.dim_customer
+ADD CONSTRAINT dim_customer_pk PRIMARY KEY (customer_id);
+
+-- ================
+-- Store Dimension
+-- ================
+SELECT 
+    s.store_id,
+    s.store_name,
+    COALESCE(s.phone, 'Unknown') AS phone,
+    COALESCE(s.email, 'Unknown') AS email,
+    s.street,
+    s.zip_code,
+    s.city
+INTO dwh.dim_store
+FROM bike_stores.stores s;
+
+ALTER TABLE dwh.dim_store
+ADD CONSTRAINT dim_store_pk PRIMARY KEY (store_id);
+
+-- ================
+-- Staff Dimension
+-- ================
+SELECT 
+    s.staff_id,
+    s.first_name,
+    s.last_name,
+    COALESCE(s.phone, 'Unknown') AS phone,
+    COALESCE(s.email, 'Unknown') AS email,
+    s.active,
+    s.manager_id,
+    s2.first_name AS manager_first_name,
+    s2.last_name AS manager_last_name
+INTO dwh.dim_staff
+FROM bike_stores.staffs s
+LEFT JOIN bike_stores.staffs s2
+    ON s.manager_id = s2.staff_id;
+
+ALTER TABLE dwh.dim_staff
+ADD CONSTRAINT dim_staff_pk PRIMARY KEY (staff_id);
+
+-- ==========================
+-- Staff Hierarchy Bridge
+-- ==========================
+WITH sh AS (
+    SELECT
+        staff_id,
+        staff_id AS subordinate_id,
+        0 AS hierarchy_depth
+    FROM bike_stores.staffs
+    UNION ALL
+    SELECT 
+        sh.staff_id,
+        s.staff_id AS subordinate_id,
+        sh.hierarchy_depth + 1 AS hierarchy_depth
+    FROM sh
+    JOIN bike_stores.staffs s
+        ON sh.subordinate_id = s.manager_id
+)
+SELECT 
+    staff_id,
+    subordinate_id,
+    hierarchy_depth
+INTO dwh.staff_hierarchy
+FROM sh;
+
+ALTER TABLE dwh.staff_hierarchy
+ADD CONSTRAINT staff_hierarchy_d_staff_fk 
+    FOREIGN KEY (staff_id) REFERENCES dwh.dim_staff(staff_id);
+
+ALTER TABLE dwh.staff_hierarchy
+ADD CONSTRAINT staff_hierarchy_d_subordinate_fk 
+    FOREIGN KEY (subordinate_id) REFERENCES dwh.dim_staff(staff_id);
+
+-- ===============
+-- Date Dimension
+-- ===============
+CREATE TABLE dwh.dim_date (
+    date_id INT NOT NULL,
+    date DATE NOT NULL,
+    day_name VARCHAR(20) NOT NULL,
+    day_of_month INT NOT NULL,
+    week_of_month INT NOT NULL,
+    week_of_year INT NOT NULL,
+    month INT NOT NULL,
+    month_name VARCHAR(20) NOT NULL,
+    quarter INT NOT NULL,
+    year INT NOT NULL,
+    is_weekend BIT NOT NULL
+);
+
+-- Insert data into dim_date
+;WITH date_seq AS (
+    SELECT 
+        DATEADD(DAY, seq.num, '2016-01-01') AS d
+    FROM (
+        SELECT TOP 2000 ROW_NUMBER() OVER (ORDER BY (SELECT NULL)) - 1 AS num
+        FROM sys.objects
+    ) seq
+)
+INSERT INTO dwh.dim_date
+SELECT 
+    CONVERT(INT, CONVERT(CHAR(8), d, 112)) AS date_id,
+    d AS date,
+    DATENAME(WEEKDAY, d) AS day_name,
+    DAY(d) AS day_of_month,
+    DATEPART(WEEK, d) - DATEPART(WEEK, DATEFROMPARTS(YEAR(d), MONTH(d), 1)) + 1 AS week_of_month,
+    DATEPART(WEEK, d) AS week_of_year,
+    MONTH(d) AS month,
+    DATENAME(MONTH, d) AS month_name,
+    DATEPART(QUARTER, d) AS quarter,
+    YEAR(d) AS year,
+    CASE 
+        WHEN DATEPART(WEEKDAY, d) IN (7, 1) THEN 1 -- Sunday = 1, Saturday = 7
+        ELSE 0
+    END AS is_weekend
+FROM date_seq
+ORDER BY date_id;
+
+ALTER TABLE dwh.dim_date
+ADD CONSTRAINT dim_date_pk PRIMARY KEY (date_id);
+
+ALTER TABLE dwh.dim_date
+ADD CONSTRAINT dim_date_date_u UNIQUE(date);
 ```
 
 ### **Data Insertion for Fact Tables**
