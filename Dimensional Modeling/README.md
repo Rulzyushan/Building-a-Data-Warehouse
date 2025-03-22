@@ -11,3 +11,12 @@ The optimal schema design for an operational information system implemented in a
 - Declaring the gain.
 - Identifying the dimensions.
 - Identifying the facts.
+
+### **Business Processes**
+In database, we can identify the following processes:
+
+- Ordering a bike by a customer.
+- Shipping a bike from a store to a customer.
+- Snapsh the stock of bikes in each store for each day.
+  
+The reason for considering ordering and shipping a bike as two different processes is that the order date and the shipment date are not necessarily identical, meaning the two processes do not occur simultaneously. Thus, each should be evaluated in a separate fact table.
